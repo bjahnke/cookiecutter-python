@@ -1,17 +1,20 @@
-import socket
-import typing
+from sqlalchemy import create_engine
+from src.scalpyr import Scalpyr
+from src.fetch_data.table_builders import SeatgeekData
+import env
+from flask import Flask, request
 
-def hof_main(host, port, main_function: typing.Callable):
+app = Flask(__name__)
+
+
+@app.route('/', methods=['POST'])
+def handle_request():
     """
-    This function is a higher order function that wraps the main function of the app.
-    It is used to make the app compatible with Google Cloud Run.
-    Example usage: hof_main('0.0.0.0', 8080, main)
-    :param host: ip address of host for socket to listen on
-    :param port: port for socket to listen on
-    :param main_function: main driver function of the app
+    This is the main function that will be called by the cloud function.
     :return:
     """
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((host, port))
-        s.listen()
-        main_function(s)
+    return 'Service executed with no errors'
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080)
